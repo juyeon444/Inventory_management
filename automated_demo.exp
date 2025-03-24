@@ -1,0 +1,286 @@
+#!/usr/bin/expect
+
+set venv_path ".venv/bin/activate"
+
+set program "source $venv_path; python main.py"
+spawn bash -c "$program"
+
+# Function to wait for a prompt and send input
+proc send_input {prompt input} {
+    expect $prompt
+    send "$input\r"
+    sleep 1
+}
+
+# Function to navigate to User Management
+proc go_to_user_management {} {
+    expect "Enter your choice:"
+    send "1\r"
+    sleep 1
+}
+
+# Function to navigate to Admin Management
+proc go_to_admin_management {} {
+    expect "Enter your choice:"
+    send "2\r"
+    sleep 1
+}
+
+# Function to navigate to Inventory Management
+proc go_to_inventory_management {} {
+    expect "Enter your choice:"
+    send "3\r"
+    sleep 1
+}
+
+# Function to navigate to Order Management
+proc go_to_order_management {} {
+    expect "Enter your choice:"
+    send "4\r"
+    sleep 1
+}
+
+# 1. Navigate to User Management
+go_to_user_management
+
+# 2. Register a New User
+send_input "Enter your choice:" "1"
+send_input "Enter username:" "gelms1b"
+send_input "Enter password:" "oX1+<75C_z$"
+send_input "Enter email:" "gelms1b@ft.com"
+send_input "Enter first name:" "Gregoor"
+send_input "Enter last name:" "Elms"
+send_input "Enter phone number:" "383-469-6402"
+sleep 2
+
+# 3. View All Users
+send_input "Enter your choice:" "2"
+sleep 2
+
+# 5. Change User Password
+send_input "Enter your choice:" "4"
+send_input "Enter user ID:" "47"
+send_input "Enter new password:" "dL9~abUZR@C"
+sleep 2
+
+# 7. Add a New Address
+send_input "Enter your choice:" "7"
+send_input "Enter user ID:" "47"
+send_input "Enter street:" "63 Nevada Road"
+send_input "Enter city:" "Kansas City"
+send_input "Enter state:" "Missouri"
+send_input "Enter postal code:" "64149"
+send_input "Enter country:" "United States"
+sleep 2
+
+# 8. View All Saved Addresses
+send_input "Enter your choice:" "8"
+sleep 2
+
+# 11. Edit an Existing Address
+send_input "Enter your choice:" "11"
+send_input "Enter address ID to update:" "15"
+send_input "Enter new street:" "456 Updated St"
+send_input "Enter new city:" "San Francisco"
+send_input "Enter new state:" "California"
+send_input "Enter new postal code:" "94105"
+send_input "Enter new country:" "USA"
+sleep 2
+
+# 12. Delete an Address
+send_input "Enter your choice:" "12"
+send_input "Enter address ID to delete:" "17"
+sleep 2
+
+# 13. Delete a User
+send_input "Enter your choice:" "6"
+send_input "Enter user ID to delete:" "47"
+sleep 2
+
+# Return to Main Menu
+send_input "Enter your choice:" "0"
+sleep 2
+
+# 1. Navigate to Admin Management
+go_to_admin_management
+
+# 2. Create a New Admin
+send_input "Enter your choice:" "1"
+send_input "Enter username:" "sfossord18"
+send_input "Enter password:" "fR0<*li7Ew*wnP"
+send_input "Enter email:" "sfossord18@about.me"
+send_input "Enter first name:" "Saxe"
+send_input "Enter last name:" "Fossord"
+send_input "Enter phone number:" "716-356-2807"
+send_input "Enter admin level" "2"
+send_input "Enter department" "2"
+sleep 2
+
+# 3. View All Admins
+send_input "Enter your choice:" "2"
+sleep 2
+
+# 6. Update Admin Information
+send_input "Enter your choice:" "5"
+send_input "Enter admin ID to update:" "17"
+send_input "Enter admin level" "3"
+send_input "Enter department" "3"
+sleep 2
+
+# 7. Delete an Admin
+send_input "Enter your choice:" "6"
+send_input "Enter admin ID to delete:" "17"
+sleep 2
+
+# Return to Main Menu
+send_input "Enter your choice:" "0"
+
+# Navigate to Inventory Management
+go_to_inventory_management
+
+# 1. Add a New Brand
+send_input "Enter your choice:" "1"
+send_input "Enter brand name:" "LG"
+sleep 2
+
+# 2. View All Brands
+send_input "Enter your choice:" "2"
+sleep 2
+
+# 4. Edit a Brand
+send_input "Enter your choice:" "4"
+send_input "Enter brand ID to update:" "27"
+send_input "Enter new brand name:" "Celkon"
+sleep 2
+
+# 6. Add a New Supplier
+send_input "Enter your choice:" "6"
+send_input "Enter supplier name:" "Agimba"
+send_input "Enter contact email:" "dswetland1b@redcross.org"
+send_input "Enter contact phone number:" "808-104-0379"
+send_input "Enter street:" "99 Almo Circle"
+send_input "Enter city:" "Honolulu"
+send_input "Enter state:" "Hawaii"
+send_input "Enter postal code:" "96805"
+send_input "Enter country:" "United States"
+sleep 2
+
+# 7. View All Suppliers
+send_input "Enter your choice:" "7"
+sleep 2
+
+# 9. Edit a Supplier
+send_input "Enter your choice:" "9"
+send_input "Enter supplier ID to update:" "22"
+send_input "Enter new supplier name:" "Skibatt"
+send_input "Enter new contact email:" "tclqque1w@youtube.com"
+send_input "Enter new contact phone number:" "808-602-2874"
+send_input "Enter new street:" "757 Southridge Pass"
+send_input "Enter new city:" "Honolulu"
+send_input "Enter new state:" "Hawaii"
+send_input "Enter new postal code:" "96805"
+send_input "Enter new country:" "United States"
+sleep 2
+
+# 11. Add a New Product
+send_input "Enter your choice:" "11"
+send_input "Enter product name:" "verykool i280"
+send_input "Enter product description:" "Android 5.0"
+send_input "Enter product price (up to 2 decimal places):" "965.45"
+send_input "Enter brand ID:" "1"
+send_input "Enter supplier ID:" "1"
+sleep 3
+
+# 12. View All Products
+send_input "Enter your choice:" "12"
+sleep 3
+
+# 14. Edit a Product
+send_input "Enter your choice:" "14"
+send_input "Enter Product ID to update:" "33"
+send_input "Enter new product name:" "QMobile Noir V4"
+send_input "Enter new product description:" "Android 4.2"
+send_input "Enter new price (Press Enter to keep unchanged):" "1134.38"
+send_input "Enter new brand ID (Press Enter to keep unchanged):" "2"
+send_input "Enter new supplier ID (Press Enter to keep unchanged):" "2"
+sleep 3
+
+# 16. Add Inventory Stock
+send_input "Enter your choice:" "16"
+send_input "Enter Product ID to add to inventory:" "33"
+send_input "Enter stock quantity:" "50"
+sleep 2
+
+# 17. View All Inventory
+send_input "Enter your choice:" "17"
+sleep 2
+
+# 19. Update Inventory Stock
+send_input "Enter your choice:" "19"
+send_input "Enter Inventory ID to update:" "7"
+send_input "Enter new stock quantity:" "120"
+sleep 2
+
+# 20. Remove Inventory Stock
+send_input "Enter your choice:" "20"
+send_input "Enter Inventory ID to delete:" "29"
+sleep 2
+
+# 15. Remove a Product
+send_input "Enter your choice:" "15"
+send_input "Enter product ID to delete:" "33"
+sleep 2
+
+# 10. Remove a Supplier
+send_input "Enter your choice:" "10"
+send_input "Enter supplier ID to delete:" "22"
+sleep 2
+
+# 5. Remove a Brand
+send_input "Enter your choice:" "5"
+send_input "Enter brand ID to delete:" "28"
+sleep 2
+
+# Return to Main Menu
+send_input "Enter your choice:" "0"
+
+# Navigate to Order Management
+go_to_order_management
+
+# 3. Create a New Order with Items
+send_input "Enter your choice:" "3"
+send_input "Enter user ID:" "1"
+send_input "Enter shipping address ID:" "1"
+send_input "Enter product ID (press Enter to finish):" "1"
+send_input "Enter quantity:" "2"
+send_input "Enter product ID (press Enter to finish):" "2"
+send_input "Enter quantity:" "3"
+send_input "Enter product ID (press Enter to finish):" ""
+sleep 2
+
+# 5. View Order Details by Order ID
+send_input "Enter your choice:" "5"
+send_input "Enter Order ID:" "29"
+sleep 2
+
+# 6. View Order Items by Order ID
+send_input "Enter your choice:" "6"
+send_input "Enter Order ID:" "29"
+sleep 2
+
+# 8. Update Order Status
+send_input "Enter your choice:" "8"
+send_input "Enter order ID to update:" "23"
+send_input "Select the new delivery status (1-4):" "2"
+sleep 2
+
+# 9. Delete an Order
+send_input "Enter your choice:" "9"
+send_input "Enter order ID to delete:" "32"
+sleep 2
+
+# Return to Main Menu
+send_input "Enter your choice:" "0"
+
+# End of script
+expect eof
