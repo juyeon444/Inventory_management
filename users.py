@@ -1,3 +1,4 @@
+from password_security import hash_password
 import menus
 from utils import get_valid_int
 from mysql.connector import Error
@@ -6,6 +7,9 @@ from mysql.connector import Error
 def create_user(connection):
     username = input("Enter username: ").strip()
     password = input("Enter password: ").strip()
+    if not password:
+        print("Password is required.")
+        return
     email = input("Enter email: ").strip()
     first_name = input("Enter first name: ").strip()
     last_name = input("Enter last name: ").strip()
@@ -18,11 +22,11 @@ def create_user(connection):
         INSERT INTO users (username, password, email, first_name, last_name, phone_number, role)
         VALUES (%s, %s, %s, %s, %s, %s, 'customer')
         """
-        cursor.execute(query, (username, password, email, first_name, last_name, phone_number))
+        cursor.execute(query, (username, hash_password(password), email, first_name, last_name, phone_number))
         connection.commit()
         print("User created successfully.")
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def read_all_users(connection):
@@ -30,7 +34,7 @@ def read_all_users(connection):
     try:
         cursor = connection.cursor(dictionary=True)  
         query = """
-        SELECT user_id, username, password, email, first_name, last_name, phone_number, role, created_at
+        SELECT user_id, username, email, first_name, last_name, phone_number, role, created_at
         FROM users
         ORDER BY user_id
         """
@@ -40,7 +44,7 @@ def read_all_users(connection):
         if users:
             print("\n User List:")
             print("-" * 180)
-            print(f"{'ID':<5} {'Username':<20} {'Password':<30} {'Email':<30} {'First Name':<15} {'Last Name':<15} {'Phone':<15} {'Role':<10} {'Created At':<20}")
+            print(f"{'ID':<5} {'Username':<20} {'Email':<30} {'First Name':<15} {'Last Name':<15} {'Phone':<15} {'Role':<10} {'Created At':<20}")
             print("-" * 180)
 
             for user in users:
@@ -52,13 +56,13 @@ def read_all_users(connection):
 
                 created_at_str = created_at.strftime('%Y-%m-%d %H:%M:%S') if created_at else 'N/A'
 
-                print(f"{user['user_id']:<5} {user['username']:<20} {user['password']:<30} {user['email']:<30} {user['first_name']:<15} {user['last_name']:<15} {user['phone_number']:<15} {user['role']:<10} {created_at_str:<20}")
+                print(f"{user['user_id']:<5} {user['username']:<20} {user['email']:<30} {user['first_name']:<15} {user['last_name']:<15} {user['phone_number']:<15} {user['role']:<10} {created_at_str:<20}")
 
             print("-" * 180)
         else:
             print("No user found.")
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def read_user_by_user_id(connection):
@@ -68,7 +72,7 @@ def read_user_by_user_id(connection):
     try:
         cursor = connection.cursor(dictionary=True)  # ✅ Use dictionary cursor
         query = """
-        SELECT user_id, username, password, email, first_name, last_name, phone_number, role, created_at
+        SELECT user_id, username, email, first_name, last_name, phone_number, role, created_at
         FROM users
         WHERE user_id = %s
         """
@@ -78,7 +82,7 @@ def read_user_by_user_id(connection):
         if user:
             print("\n User Details:")
             print("-" * 180)
-            print(f"{'ID':<5} {'Username':<20} {'Password':<30} {'Email':<30} {'First Name':<15} {'Last Name':<15} {'Phone':<15} {'Role':<10} {'Created At':<20}")
+            print(f"{'ID':<5} {'Username':<20} {'Email':<30} {'First Name':<15} {'Last Name':<15} {'Phone':<15} {'Role':<10} {'Created At':<20}")
             print("-" * 180)
 
             created_at = user["created_at"]
@@ -90,33 +94,36 @@ def read_user_by_user_id(connection):
 
             created_at_str = created_at.strftime('%Y-%m-%d %H:%M:%S') if created_at else 'N/A'
 
-            print(f"{user['user_id']:<5} {user['username']:<20} {user['password']:<30} {user['email']:<30} {user['first_name']:<15} {user['last_name']:<15} {user['phone_number']:<15} {user['role']:<10} {created_at_str:<20}")
+            print(f"{user['user_id']:<5} {user['username']:<20} {user['email']:<30} {user['first_name']:<15} {user['last_name']:<15} {user['phone_number']:<15} {user['role']:<10} {created_at_str:<20}")
             print("-" * 180)
         else:
             print(f"No user found with user_id: {user_id}")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 
 def update_user_password(connection):
     user_id = get_valid_int("Enter user ID: ")
     new_password = input("Enter new password: ").strip()
+    if not new_password:
+        print("Password is required.")
+        return
             
     """Update a user's password using a Prepared Statement."""
     try:
         cursor = connection.cursor(prepared=True)
         query = """
-        UPDATE Users
+        UPDATE users
         SET password = %s
         WHERE user_id = %s
         """
-        cursor.execute(query, (new_password, user_id))
+        cursor.execute(query, (hash_password(new_password), user_id))
         connection.commit()
         print("Password updated successfully.")
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def update_user_contact(connection):
@@ -141,7 +148,7 @@ def update_user_contact(connection):
             print("No user found with the given ID. No changes made.")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def delete_user(connection):
@@ -155,7 +162,7 @@ def delete_user(connection):
 
         print("User deleted successfully.")
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def create_address(connection):
@@ -177,7 +184,7 @@ def create_address(connection):
         connection.commit()
         print("Address created successfully.")
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def view_all_addresses(connection):
@@ -206,7 +213,7 @@ def view_all_addresses(connection):
         else:
             print("No addresses found.")
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def read_addresses_by_user_id(connection):
@@ -239,7 +246,7 @@ def read_addresses_by_user_id(connection):
             print(f"No addresses found for User ID: {user_id}")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def read_addresses_by_address_id(connection):
@@ -270,7 +277,7 @@ def read_addresses_by_address_id(connection):
             print(f"No address found with Address ID: {address_id}")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def update_address(connection):
@@ -297,7 +304,7 @@ def update_address(connection):
 
         print("Address updated successfully.")
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def delete_address(connection):
@@ -310,7 +317,7 @@ def delete_address(connection):
         connection.commit()
         print("Address deleted successfully.")
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def user_operations(connection):

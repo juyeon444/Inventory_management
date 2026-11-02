@@ -389,9 +389,11 @@ BEGIN
     END;
 
     
+    IF p_password NOT REGEXP '^pbkdf2_sha256[$]600000[$][0-9a-f]{32}[$][0-9a-f]{64}$' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Encoded password required';
+    END IF;
     START TRANSACTION;
 
-    
     INSERT INTO users (username, password, email, first_name, last_name, phone_number, role)
     VALUES (p_username, p_password, p_email, p_first_name, p_last_name, p_phone_number, 'admin');
 
@@ -558,3 +560,4 @@ DELIMITER ;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2025-02-01  1:10:25
+
