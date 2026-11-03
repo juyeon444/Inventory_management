@@ -1,3 +1,4 @@
+from password_security import hash_password
 import menus
 from users import read_user_by_user_id
 from utils import get_valid_int
@@ -45,6 +46,9 @@ def get_admin_level_and_department():
 def create_admin(connection):
     username = input("Enter username: ").strip()
     password = input("Enter password: ").strip()
+    if not password:
+        print("Password is required.")
+        return
     email = input("Enter email: ").strip()
     first_name = input("Enter first name: ").strip()
     last_name = input("Enter last name: ").strip()
@@ -59,14 +63,14 @@ def create_admin(connection):
     try:
         cursor = connection.cursor()
         query = "CALL create_admin_account(%s, %s, %s, %s, %s, %s, %s, %s)"
-        cursor.execute(query, (username, password, email, first_name, last_name, phone_number, admin_level_str, department_str))            
+        cursor.execute(query, (username, hash_password(password), email, first_name, last_name, phone_number, admin_level_str, department_str))            
         connection.commit()
         print("Admin account created successfully.")
     except Error as e:
         if e.errno == 1644:
             print("Error: An account with this username or email already exists.")
         else:
-            print(f"Error: {e}")
+            print("Database operation failed.")
 
 def view_admins(connection):
     """Fetch all admins and display correctly formatted output."""
@@ -104,7 +108,7 @@ def view_admins(connection):
             print("No admins found.")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def view_admin_by_admin_id(connection):
@@ -142,7 +146,7 @@ def view_admin_by_admin_id(connection):
             print(f"No admin found with Admin ID: {admin_id}")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def view_admin_by_user_id(connection):
@@ -180,7 +184,7 @@ def view_admin_by_user_id(connection):
             print(f"No admin found with User ID: {user_id}")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def update_admin(connection):
@@ -208,7 +212,7 @@ def update_admin(connection):
         else:
             print("No admin found with the given ID.")
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def delete_admin(connection):
@@ -231,7 +235,7 @@ def delete_admin(connection):
             print("Admin ID not found.")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
     finally:
         cursor.close()
@@ -254,7 +258,7 @@ def promote_user_to_admin(connection):
         print("User promoted to admin successfully.")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
     finally:
         cursor.close()
 
@@ -286,7 +290,7 @@ def read_customers(connection):
             print("No customers found.")
 
     except Error as e:
-        print(f"Error: {e}")
+        print("Database operation failed.")
 
 
 def admin_operations(connection):
@@ -316,3 +320,4 @@ def admin_operations(connection):
             break
         else:
             print("Invalid choice. Please try again.")
+
